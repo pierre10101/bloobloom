@@ -12,7 +12,7 @@ defineEmits<{
 </script>
 <template>
         <div class="dropdown">
-            <button class="dropbtn">{{title}}</button>
+            <button class="dropbtn flex">{{title}}</button>
             <div class="dropdown-content flex flex-column">
                 <div class="flex flex-row flex-between item" v-for="(value,key) in data" :key="key">
                     <label :for="value">{{value}}</label>
@@ -34,6 +34,7 @@ ul {
     font-size: 16px;
     border: none;
     color: black;
+    flex: 1;
 }
 
 .dropdown {
@@ -49,13 +50,9 @@ ul {
 }
 
 .dropdown:hover .dropdown-content {
-    display: block;
+    display: flex;
 }
 
-.dropdown:hover .dropbtn {
-    background-color: black;
-    color: white;
-}
 label {
     font-size: 12px;
 }
