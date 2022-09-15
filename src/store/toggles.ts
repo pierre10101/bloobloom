@@ -14,8 +14,8 @@ export const useToggleStore = defineStore('toggle', {
       sidebarMenu: false,
       sidebarSubmenu: false,
       mockupSidebarWidth: 0.45,
-      gender: null,
-      product: null
+      gender: 'women',
+      product: 'spectacles'
     }),
   actions: {
     toggleSidebarMenu(state: boolean, sidebar: string, gender: string | null = null) {

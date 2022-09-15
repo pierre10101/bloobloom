@@ -19,3 +19,42 @@ a:link {
 a:visited {
     text-decoration: none;
 }
+
+.center {
+    text-align: center;
+}
+
+.flex {
+    display: flex;
+}
+.flex-row {
+    flex-direction: row;
+}
+.flex-column {
+    flex-direction: column;
+}
+.flex-single {
+    flex:1;
+}
+.flex-double {
+    flex: 2;
+}
+
+.flex-end {
+    justify-content: flex-end;
+}
+
+.flex-start {
+    justify-content: flex-start;
+}
+
+.flex-center {
+    justify-content:  center;
+}
+
+.flex-vertical-align {
+    align-items: center;
+}
+.flex-horizontal-align {
+    justify-content: center;
+}
