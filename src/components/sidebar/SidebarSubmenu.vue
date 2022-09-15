@@ -11,7 +11,7 @@ const store = useToggleStore();
 <template>
     <section class="sidebar__section">
         <button class="sidebar__item"
-            @click="store.toggleSidebaraMenu(false, 'sidebarSubmenu'),store.toggleSidebaraMenu(true, 'sidebarMenu')"><svg width="11" height="16" viewBox="0 0 11 16" fill="none" class="sidemenu-tab-icon"><path d="M10 15.3999L2 8.1999L10 0.999902" stroke="black" stroke-opacity="0.85" stroke-width="1.5"></path></svg> <span>Go Back</span></button>
+            @click="store.toggleSidebarMenu(false, 'sidebarSubmenu'),store.toggleSidebarMenu(true, 'sidebarMenu')"><svg width="11" height="16" viewBox="0 0 11 16" fill="none" class="sidemenu-tab-icon"><path d="M10 15.3999L2 8.1999L10 0.999902" stroke="black" stroke-opacity="0.85" stroke-width="1.5"></path></svg> <span>Go Back</span></button>
         <a :href="gender === 'women' ? '#women' : '#men'" class="sidebar__item">Spectacles</a>
         <a :href="gender === 'women' ? '#women' : '#men'" class="sidebar__item">SunGlasses</a>
     </section>

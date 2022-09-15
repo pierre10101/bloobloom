@@ -1,3 +1,8 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 body {
     margin: 0;
 }
@@ -50,6 +55,14 @@ a:visited {
 
 .flex-center {
     justify-content:  center;
+}
+
+.flex-between {
+    justify-content: space-between;
+}
+
+.flex-evenly {
+    justify-content: space-evenly;
 }
 
 .flex-vertical-align {
