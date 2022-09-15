@@ -56,17 +56,17 @@ const url = computed(() => {
 <template>
     <main class="main">
         <header>
-            <div class="flex flex-double flex-end">
+            <section class="flex flex-double flex-end">
                 <div class="flex header__item flex-horizontal-align flex-vertical-align">Spectacles Woman</div>
-            </div>
-            <div class="flex flex-single flex-start">
+            </section>
+            <section class="flex flex-single flex-start">
                 <div class="flex header__subitem flex-horizontal-align flex-vertical-align">
                     <Dropdown title="Colour" :data="colours" @select="setColour($event), applyFilter()" :item="colour"/>
                 </div>
                 <div class="flex header__subitem flex-horizontal-align flex-vertical-align">
                     <Dropdown title="Shape" :data="shapes" @select="setShape($event), applyFilter()" :item="shape" />
                 </div>
-            </div>
+            </section>
         </header>
         <section class="flex flex-row table">
             <section :class="calculateMiddleColumn(key + 1) ? 'flex table__cell_last' : 'flex table__cell' "
@@ -95,6 +95,7 @@ const url = computed(() => {
 header {
     display: flex;
     height: calc(100vh * 0.07);
+    width: 100%;
     padding: 0;
     background: none;
     font-size: 24px;
@@ -104,6 +105,24 @@ header {
     cursor: pointer;
     text-align: center;
 }
+
+@media (max-width: 1365.9px) {
+    header {
+        flex-direction: column;
+        height: auto;
+    }
+    header section {
+        justify-content: center;
+        flex: 1;
+    }
+    main header section:nth-child(1) {
+        border:none;
+        border-bottom: 1px solid black;
+    }
+    .header__subitem:nth-child(1) {
+        border-left:1px solid black;
+    }
+}   
 
 .table {
     border-top: 1px solid black;
@@ -123,11 +142,37 @@ header {
     border-right: 1px solid black;
     border-bottom: 1px solid black;
 }
-
 .table__cell_last {
     width: 33.37%;
     border: none;
     border-bottom: 1px solid black;
+}
+
+@media (max-width: 1365.9px) {
+    .table__cell {
+            width: 50%;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+    }
+    .table__cell_last {
+        width: 50%;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+}
+
+@media (max-width: 600px) {
+    .table__cell {
+        width: 100%;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .table__cell_last {
+        width: 100%;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+    }
 }
 
 .cell__item {
@@ -159,6 +204,4 @@ img {
     position: absolute;
     text-align: center;
 }
-
-
 </style>

@@ -71,3 +71,6 @@ a:visited {
 .flex-horizontal-align {
     justify-content: center;
 }
+.flex-wrap {
+    flex-wrap: wrap;
+}

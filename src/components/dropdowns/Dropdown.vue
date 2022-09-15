@@ -65,4 +65,10 @@ input[type='checkbox'] {
 .item {
     margin: 1rem 1rem 0 1rem;
 }
+
+@media (max-width: 1365.9px) {
+    .dropdown-content {
+        width: 8rem;
+    }
+}
 </style>
