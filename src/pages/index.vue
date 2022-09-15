@@ -1,25 +1,24 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useIntersectionObserver } from '@vueuse/core'
-const handleInfinityScroll = (event:boolean) => {
-    console.log(event)
+import { vIntersectionObserver } from '@vueuse/components'
+const data = ref<any>([]);
+const handleInfinityScroll = async ([{ isIntersecting }]) => {
+    if(isIntersecting) {
+        if (data.value.length === 0) {
+            data.value = (await fetchData()).glasses
+        } else {
+            data.value = data.value.concat((await fetchData()).glasses)
+        }
+    }
 }
-const target = ref(null)
 
-useIntersectionObserver(
-    target.value,
-    ([{ isIntersecting }], observerElement) => {
-        handleInfinityScroll(true)
-    },
-)
 const fetchData = async () => {
    return await (await fetch('https://staging-api.bloobloom.com/user/v1/sales_channels/website/collections/spectacles-men/glasses?sort[type]=collection_relations_position&sort[order]=asc&filters[lens_variant_prescriptions][]=fashion&filters[lens_variant_types][]=classic&page[limit]=12&page[number]=1&filters[glass_variant_frame_variant_colour_tag_configuration_names][]=coloured&filters[glass_variant_frame_variant_colour_tag_configuration_names][]=black&filters[glass_variant_frame_variant_frame_tag_configuration_names][]=round&filters[frame_variant_home_trial_available]=false')).json()
 }
-const data = ref<any>({glasses: ''});
 onMounted(async () => {
-    data.value = await fetchData()
-
+    data.value = (await fetchData()).glasses
 })
+
 </script>
 <template>
 <main class="main">
@@ -35,9 +34,15 @@ onMounted(async () => {
         </div>
     </header>
     <section class="flex flex-row table">
-        <section class="table__cell" v-for="(value,key) of data.glasses" :key="key" >
-            <div v-if="(key + 1) % 12 !== 0">{{value.id}}</div>
-            <div v-else ref="target">{{value.id}}</div>
+        <section class="flex table__cell" v-for="(value,key) of data" :key="key" >
+            <div class="flex cell__item" v-if="(key + 1) % 12 !== 0">
+                <h1 class="title">{{value.name}}</h1>
+                <img :src="value.glass_variants[0].media[0].url" alt="glasses" />
+            </div>
+            <div class="flex cell__item" v-else v-intersection-observer="handleInfinityScroll">
+                <h1 class="title">{{value.name}}</h1>
+                <img :src="value.glass_variants[0].media[0].url" alt="glasses" />
+            </div>
         </section>
     </section>
 </main>
@@ -59,11 +64,10 @@ header {
     letter-spacing: 2px;
     cursor: pointer;
     text-align: center;
-    border-bottom: 1px solid black;
 }
 
 .table {
-    height: calc(100vh * 0.07);
+    height: calc(100vh * 0.45);
     padding: 0;
     background: none;
     font-size: 16px;
@@ -74,7 +78,15 @@ header {
     flex-wrap: wrap;
 }
 .table__cell {
-    width: calc(100vw * 0.33)
+    width: 33.3333%
+}
+.cell__item {
+    display:flex;
+    justify-content: center;
+    position: relative;
+    width:100%;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
 }
 .header__item {
     border:none;
@@ -85,5 +97,13 @@ header {
 .header__subitem {
     border: none;
     border-right: 1px solid black;
+}
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.title {
+    position: absolute;
+    text-align: center;
 }
 </style>

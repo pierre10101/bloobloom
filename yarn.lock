@@ -471,7 +471,16 @@
   "resolved" "https://registry.npmjs.org/@vue/shared/-/shared-3.2.38.tgz"
   "version" "3.2.38"
 
-"@vueuse/core@^9.2.0":
+"@vueuse/components@^9.2.0":
+  "integrity" "sha512-NgQRhq5v1LRZsQq21rJlY8VjEqYg5xWiGErBftY+HaBhHsLAn4PxJxtvbe9uZNdOQlRdWM3UPUF6NO/sWfnyWw=="
+  "resolved" "https://registry.npmjs.org/@vueuse/components/-/components-9.2.0.tgz"
+  "version" "9.2.0"
+  dependencies:
+    "@vueuse/core" "9.2.0"
+    "@vueuse/shared" "9.2.0"
+    "vue-demi" "*"
+
+"@vueuse/core@^9.2.0", "@vueuse/core@9.2.0":
   "integrity" "sha512-/MZ6qpz6uSyaXrtoeBWQzAKRG3N7CvfVWvQxiM3ei3Xe5ydOjjtVbo7lGl9p8dECV93j7W8s63A8H0kFLpLyxg=="
   "resolved" "https://registry.npmjs.org/@vueuse/core/-/core-9.2.0.tgz"
   "version" "9.2.0"
