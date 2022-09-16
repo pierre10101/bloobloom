@@ -1,16 +1,18 @@
-# Vue 3 + TypeScript + Vite
+# Dev test for Bloobloom
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Instructions
 
-## Recommended IDE Setup
+- `npm run install`
+- `npm run dev`
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+## Note 
 
-## Type Support For `.vue` Imports in TS
+- I initially implemented the ui as per the site and later read that it was the wrong UI. 
+- Only after finishing did I read at the end that implementing the existing UI gives bonus points
+- I left remnants of the live site ui in the codebase. 
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+## Architecture
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
-
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+- Tried following BEM but departed
+- Used no Sass as my assumption was that only CSS should be used. 
+- Loosely used Nuxt folder structure. 
