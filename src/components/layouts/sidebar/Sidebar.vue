@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {left, zIndex} = defineProps<{
+const {left} = defineProps<{
     left: number
     zIndex: number,
     width: number

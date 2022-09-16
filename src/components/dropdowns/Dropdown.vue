@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, toRefs } from 'vue'
+import { toRefs } from 'vue'
 const props = defineProps<{
     title: string,
     data: string[]
@@ -12,8 +12,8 @@ defineEmits<{
 </script>
 <template>
         <div class="dropdown">
-            <button class="dropbtn flex">{{title}}</button>
-            <div class="dropdown-content flex flex-column">
+            <button class="dropdown__button flex">{{title}}</button>
+            <div class="dropdown__content flex flex-column">
                 <div class="flex flex-row flex-between item" v-for="(value,key) in data" :key="key">
                     <label :for="value">{{value}}</label>
                     <input :id="value" @input="$emit('select', $event)" type="checkbox" :value="value">
@@ -23,10 +23,7 @@ defineEmits<{
 
 </template>
 <style>
-ul {
-    list-style: none;
-}
-.dropbtn {
+.dropdown__button {
     background-color: white;
     border: none;
     color: white;
@@ -41,7 +38,7 @@ ul {
     position: relative;
 }
 
-.dropdown-content {
+.dropdown__content {
     display: none;
     position: absolute;
     background-color: white;
@@ -49,7 +46,7 @@ ul {
     z-index: 1;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown:hover .dropdown__content {
     display: flex;
 }
 
@@ -64,7 +61,7 @@ input[type='checkbox'] {
 }
 
 @media (max-width: 1365.9px) {
-    .dropdown-content {
+    .dropdown__content {
         width: 8rem;
     }
 }
