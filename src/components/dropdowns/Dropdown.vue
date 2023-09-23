@@ -27,7 +27,7 @@ defineEmits<{
     background-color: white;
     border: none;
     color: white;
-    padding: 16px;
+    padding: 14px;
     font-size: 16px;
     border: none;
     color: black;

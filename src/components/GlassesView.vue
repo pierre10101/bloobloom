@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { Ref, onMounted, ref } from 'vue';
 import { vIntersectionObserver } from '@vueuse/components'
-import {useFiltersStore } from '../store/filters';
+import { useFiltersStore } from '../store/filters';
 import Dropdown from './dropdowns/Dropdown.vue';
 import { storeToRefs } from 'pinia'
 import { computed } from '@vue/reactivity';
@@ -9,6 +9,8 @@ const store = useFiltersStore();
 const { setShape, setColour } = store;
 const { colour, colours, shape, shapes } = storeToRefs(store)
 const data = ref<any>([]);
+const imageLoaded = ref<Ref<boolean>[]>([]);
+const imagePlaceholder = "https://images.saymedia-content.com/.image/t_share/MTc1MDE1MzgyOTAwNDE4Mjgw/how-to-draw-eye-glasses.jpg";
 const handleInfinityScroll = async ([{ isIntersecting }]) => {
     if (isIntersecting) {
         if (data.value.length === 0) {
@@ -16,14 +18,23 @@ const handleInfinityScroll = async ([{ isIntersecting }]) => {
         } else {
             data.value = data.value.concat((await fetchData()).glasses)
         }
+        for (let i = 0; i <  data.value.length; i++) {
+            imageLoaded.value[i] = ref<boolean>(true);
+        }
     }
 }
 const fetchData = async () => {
     return await (await fetch(url.value)).json()
 }
+const handleImageError = async (index: number) => {
+    imageLoaded.value[index].value = false;
+}
 let page = ref(1);
 onMounted(async () => {
     data.value = (await fetchData()).glasses
+    for (let i = 0; i <  data.value.length; i++) {
+        imageLoaded.value[i] = ref<boolean>(true);
+    }
     page.value++
 })
 
@@ -44,12 +55,11 @@ const colourUrl = computed(() => colour.value.map(value => `filters[glass_varian
 const url = computed(() => {
     let formatUrl = `https://staging-api.bloobloom.com/user/v1/sales_channels/website/collections/spectacles-men/glasses?sort[type]=collection_relations_position&sort[order]=asc&filters[lens_variant_prescriptions][]=fashion&filters[lens_variant_types][]=classic&page[limit]=12&page[number]=${page.value}&filters[frame_variant_home_trial_available]=false`;
     if (shapeUrl.value) {
-        formatUrl += '&'+shapeUrl.value
+        formatUrl += '&' + shapeUrl.value
     }
     if (colourUrl.value) {
-        formatUrl += '&'+colourUrl.value
+        formatUrl += '&' + colourUrl.value
     }
-    console.log(formatUrl)
     return formatUrl;
 })
 </script>
@@ -61,7 +71,7 @@ const url = computed(() => {
             </section>
             <section class="flex flex-single flex-start">
                 <div class="flex header__subitem flex-horizontal-align flex-vertical-align">
-                    <Dropdown title="Colour" :data="colours" @select="setColour($event), applyFilter()" :item="colour"/>
+                    <Dropdown title="Colour" :data="colours" @select="setColour($event), applyFilter()" :item="colour" />
                 </div>
                 <div class="flex header__subitem flex-horizontal-align flex-vertical-align">
                     <Dropdown title="Shape" :data="shapes" @select="setShape($event), applyFilter()" :item="shape" />
@@ -69,15 +79,17 @@ const url = computed(() => {
             </section>
         </header>
         <section class="flex flex-row table">
-            <section :class="calculateMiddleColumn(key + 1) ? 'flex table__cell_last' : 'flex table__cell' "
-                v-for="(value,key) of data" :key="key">
+            <section :class="calculateMiddleColumn(key + 1) ? 'flex table__cell_last' : 'flex table__cell'"
+                v-for="(value, key) of data" :key="key">
                 <div class="flex cell__item" v-if="(key + 1) % 12 !== 0">
-                    <h1 class="title">{{value.name}}</h1>
-                    <img :src="value.glass_variants[0].media[0].url" alt="glasses" />
+                    <h1 class="title">{{ value.name }}</h1>
+                    <img @error="handleImageError(key)"
+                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder" alt="glasses" />
                 </div>
                 <div class="flex cell__item" v-else v-intersection-observer="handleInfinityScroll">
-                    <h1 class="title">{{value.name}}</h1>
-                    <img :src="value.glass_variants[0].media[0].url" alt="glasses" />
+                    <h1 class="title">{{ value.name }}</h1>
+                    <img @error="handleImageError(key)"
+                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder" alt="glasses" />
                 </div>
             </section>
         </section>
@@ -111,18 +123,21 @@ header {
         flex-direction: column;
         height: auto;
     }
+
     header section {
         justify-content: center;
         flex: 1;
     }
+
     main header section:nth-child(1) {
-        border:none;
+        border: none;
         border-bottom: 1px solid black;
     }
+
     .header__subitem:nth-child(1) {
-        border-left:1px solid black;
+        border-left: 1px solid black;
     }
-}   
+}
 
 .table {
     border-top: 1px solid black;
@@ -142,6 +157,7 @@ header {
     border-right: 1px solid black;
     border-bottom: 1px solid black;
 }
+
 .table__cell_last {
     width: 33.37%;
     border: none;
@@ -150,10 +166,11 @@ header {
 
 @media (max-width: 1365.9px) {
     .table__cell {
-            width: 50%;
-            border-right: 1px solid black;
-            border-bottom: 1px solid black;
+        width: 50%;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
     }
+
     .table__cell_last {
         width: 50%;
         border-right: 1px solid black;
@@ -203,5 +220,4 @@ img {
 .title {
     position: absolute;
     text-align: center;
-}
-</style>
+}</style>
