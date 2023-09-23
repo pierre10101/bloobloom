@@ -5,10 +5,13 @@ import { useFiltersStore } from '../store/filters';
 import Dropdown from './dropdowns/Dropdown.vue';
 import { storeToRefs } from 'pinia'
 import { computed } from '@vue/reactivity';
+import Wave from '../components/spinners/Wave.vue'
+
 const store = useFiltersStore();
 const { setShape, setColour } = store;
 const { colour, colours, shape, shapes } = storeToRefs(store)
 const data = ref<any>([]);
+const isLoading = ref<boolean>(false);
 const handleInfinityScroll = async (entries: IntersectionObserverEntry[]) => {
     if (entries[0].isIntersecting) {
         if (data.value.length === 0) {
@@ -22,6 +25,7 @@ const cleanData = computed(() => {
     return data.value;
 })
 const fetchData = async () => {
+    isLoading.value = true;
     const glasses: any = (await (await fetch(url.value)).json()).glasses
     let filtered: any = [];
     for (const item of glasses) {
@@ -29,6 +33,7 @@ const fetchData = async () => {
             filtered.push(item);
         }
     }
+    isLoading.value = false;
     return { glasses: filtered };
 }
 const checkImageExists = async (imageUrl: string): Promise<boolean> => {
@@ -77,6 +82,7 @@ const url = computed(() => {
 })
 </script>
 <template>
+    <wave :isLoading="isLoading"></wave>
     <main class="main">
         <header>
             <section class="flex flex-double flex-end">
