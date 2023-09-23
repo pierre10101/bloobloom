@@ -94,7 +94,7 @@ const url = computed(() => {
         <section class="flex flex-row table">
             <section :class="calculateMiddleColumn(key + 1) ? 'flex table__cell_last' : 'flex table__cell'"
                 v-for="(value, key) of cleanData" :key="key">
-                <div class="flex cell__item" v-if="(key + 1) % 12 !== 0">
+                <div class="flex cell__item" v-if="(key + 1) % 2 !== 0">
                     <h1 class="title">{{ value.name }}</h1>
                     <img :src="value.glass_variants[0].media[0].url" alt="glasses" />
                 </div>
