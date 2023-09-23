@@ -11,18 +11,20 @@ const { colour, colours, shape, shapes } = storeToRefs(store)
 const data = ref<any>([]);
 const imageLoaded = ref<Ref<boolean>[]>([]);
 const imagePlaceholder = "https://images.saymedia-content.com/.image/t_share/MTc1MDE1MzgyOTAwNDE4Mjgw/how-to-draw-eye-glasses.jpg";
-const handleInfinityScroll = async ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+const handleInfinityScroll = async (entries: IntersectionObserverEntry[]) => {
+    if (entries[0].isIntersecting) {
         if (data.value.length === 0) {
-            data.value = (await fetchData()).glasses
+            data.value = (await fetchData()).glasses;
         } else {
-            data.value = data.value.concat((await fetchData()).glasses)
+            data.value = data.value.concat((await fetchData()).glasses);
         }
-        for (let i = 0; i <  data.value.length; i++) {
-            imageLoaded.value[i] = ref<boolean>(true);
+
+        // Ensure that imageLoaded array is of the correct length
+        while (imageLoaded.value.length < data.value.length) {
+            imageLoaded.value.push(ref<boolean>(true));
         }
     }
-}
+};
 const fetchData = async () => {
     return await (await fetch(url.value)).json()
 }
@@ -32,7 +34,7 @@ const handleImageError = async (index: number) => {
 let page = ref(1);
 onMounted(async () => {
     data.value = (await fetchData()).glasses
-    for (let i = 0; i <  data.value.length; i++) {
+    for (let i = 0; i < data.value.length; i++) {
         imageLoaded.value[i] = ref<boolean>(true);
     }
     page.value++
@@ -84,12 +86,14 @@ const url = computed(() => {
                 <div class="flex cell__item" v-if="(key + 1) % 12 !== 0">
                     <h1 class="title">{{ value.name }}</h1>
                     <img @error="handleImageError(key)"
-                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder" alt="glasses" />
+                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder"
+                        alt="glasses" />
                 </div>
                 <div class="flex cell__item" v-else v-intersection-observer="handleInfinityScroll">
                     <h1 class="title">{{ value.name }}</h1>
                     <img @error="handleImageError(key)"
-                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder" alt="glasses" />
+                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder"
+                        alt="glasses" />
                 </div>
             </section>
         </section>
