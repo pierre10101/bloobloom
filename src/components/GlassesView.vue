@@ -9,8 +9,6 @@ const store = useFiltersStore();
 const { setShape, setColour } = store;
 const { colour, colours, shape, shapes } = storeToRefs(store)
 const data = ref<any>([]);
-const imageLoaded = ref<Ref<boolean>[]>([]);
-const imagePlaceholder = "https://images.saymedia-content.com/.image/t_share/MTc1MDE1MzgyOTAwNDE4Mjgw/how-to-draw-eye-glasses.jpg";
 const handleInfinityScroll = async (entries: IntersectionObserverEntry[]) => {
     if (entries[0].isIntersecting) {
         if (data.value.length === 0) {
@@ -18,25 +16,38 @@ const handleInfinityScroll = async (entries: IntersectionObserverEntry[]) => {
         } else {
             data.value = data.value.concat((await fetchData()).glasses);
         }
-
-        // Ensure that imageLoaded array is of the correct length
-        while (imageLoaded.value.length < data.value.length) {
-            imageLoaded.value.push(ref<boolean>(true));
-        }
     }
 };
+const cleanData = computed(() => {
+    return data.value;
+})
 const fetchData = async () => {
-    return await (await fetch(url.value)).json()
+    const glasses: any = (await (await fetch(url.value)).json()).glasses
+    let filtered: any = [];
+    for (const item of glasses) {
+        if (await checkImageExists(item.glass_variants[0].media[0].url)) {
+            filtered.push(item);
+        }
+    }
+    return { glasses: filtered };
 }
-const handleImageError = async (index: number) => {
-    imageLoaded.value[index].value = false;
+const checkImageExists = async (imageUrl: string): Promise<boolean> => {
+    try {
+        const response = await fetch(imageUrl, { method: 'HEAD' });
+        if (response.status === 200) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log('here')
+        // Handle any request exceptions (e.g., network issues)
+        return false;
+    }
 }
 let page = ref(1);
 onMounted(async () => {
     data.value = (await fetchData()).glasses
-    for (let i = 0; i < data.value.length; i++) {
-        imageLoaded.value[i] = ref<boolean>(true);
-    }
     page.value++
 })
 
@@ -82,18 +93,14 @@ const url = computed(() => {
         </header>
         <section class="flex flex-row table">
             <section :class="calculateMiddleColumn(key + 1) ? 'flex table__cell_last' : 'flex table__cell'"
-                v-for="(value, key) of data" :key="key">
+                v-for="(value, key) of cleanData" :key="key">
                 <div class="flex cell__item" v-if="(key + 1) % 12 !== 0">
                     <h1 class="title">{{ value.name }}</h1>
-                    <img @error="handleImageError(key)"
-                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder"
-                        alt="glasses" />
+                    <img :src="value.glass_variants[0].media[0].url" alt="glasses" />
                 </div>
                 <div class="flex cell__item" v-else v-intersection-observer="handleInfinityScroll">
                     <h1 class="title">{{ value.name }}</h1>
-                    <img @error="handleImageError(key)"
-                        :src="imageLoaded[key].value ? value.glass_variants[0].media[0].url : imagePlaceholder"
-                        alt="glasses" />
+                    <img :src="value.glass_variants[0].media[0].url" alt="glasses" />
                 </div>
             </section>
         </section>
@@ -224,4 +231,5 @@ img {
 .title {
     position: absolute;
     text-align: center;
-}</style>
+}
+</style>
